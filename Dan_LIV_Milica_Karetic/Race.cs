@@ -20,6 +20,9 @@ namespace Dan_LIV_Milica_Karetic
 
         private static int carCounter = 0;
 
+        CountdownEvent cnt = new CountdownEvent(3);
+        SemaphoreSlim gasStation = new SemaphoreSlim(1);
+
         public  void ChangeSemaphoreColor()
         {
             Console.WriteLine("Semaphore is  active.");
@@ -55,17 +58,89 @@ namespace Dan_LIV_Milica_Karetic
             {
                 for (int i = 0; i < Program.allAutomobiles.Count; i++)
                 {
-                    Program.allAutomobiles[i].TankVolume = Program.allAutomobiles[i].TankVolume - rng.Next(1, 5);
+                    Program.allAutomobiles[i].MaxTankVolume = Program.allAutomobiles[i].MaxTankVolume - rng.Next(1, 5);
                 }
                 Thread.Sleep(1000);
             }
         }
 
+        public void Drive(int secs, Automobile auto)
+        {
+            for (int i = 0; i < secs; i++)
+            {
+                Thread.Sleep(1000);
+                if (auto.MaxTankVolume <= 0)
+                {
+                    break;
+                }
+            }
+        }
+        readonly object l = new object();
+
         public void Racing(Automobile automobile)
         {
-           
+            cnt.Signal();
+            cnt.Wait();
 
             automobile.Move();
+
+            while(automobile.MaxTankVolume > 0)
+            {
+                //driving to semaphore
+                Drive(10, automobile);
+
+                Console.WriteLine("{0} {1} reached the semaphore, currently light is {2}", automobile.Color, automobile.Producer, semaphoreColor);
+
+                //wait until currently light is green
+                while (semaphoreColor == "Red")
+                {
+                    Thread.Sleep(0);
+                }
+
+                lock (l)
+                {
+                    carCounter++;
+                }
+
+                //drive to gas stayion
+                Drive(3, automobile);
+
+                if (automobile.MaxTankVolume < 15)
+                {
+                    ChargingAtGasStation(automobile);
+                }
+                else
+                {
+                    Console.WriteLine("{0} {1} passed the gas station with tank valume: {2}l.", automobile.Color, automobile.Producer, automobile.MaxTankVolume);
+                }
+
+                Drive(7, automobile);
+
+                break;
+            }
+
+            // Checks if the car is out of gas
+            if (automobile.MaxTankVolume <= 0)
+            {
+                automobile.Stop();
+                Console.WriteLine("{0} {1} is out of gas and left the race.", automobile.Color, automobile.Producer);
+            }
+            else if (automobile.MaxTankVolume > 0)
+            {
+                Console.WriteLine("{0} {1} car arrived to the end of race", automobile.Color, automobile.Producer);
+                // Reset the tank volume
+                automobile.Stop();
+            }
+        }
+
+        public void ChargingAtGasStation(Automobile automobile)
+        {
+            gasStation.Wait();
+            Console.WriteLine("{0} {1} is charging, current tank volume: {2}l", automobile.Color, automobile.Producer, automobile.MaxTankVolume);
+            Thread.Sleep(50);
+            automobile.MaxTankVolume = 51;
+            Console.WriteLine("{0} {1} finished charging their tank", automobile.Color, automobile.Producer);
+            gasStation.Release();
         }
     }
 }

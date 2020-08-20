@@ -10,7 +10,7 @@ namespace Dan_LIV_Milica_Karetic
     {
         public string RegistrationNumber { get; set; }
         public int DoorNumber { get; set; }
-        public int TankVolume { get; set; }
+        public int MaxTankVolume { get; set; }
         public string TransportType { get; set; }
         public string Producer { get; set; }
         public int TrafficNumber { get; set; }
@@ -46,7 +46,7 @@ namespace Dan_LIV_Milica_Karetic
                 Category = allCategory[rng.Next(0, allCategory.Length)],
                 MotorType = allMotorType[rng.Next(0, allMotorType.Length)],
                 DoorNumber = rng.Next(3, 6),
-                TankVolume = rng.Next(51, 101),
+                MaxTankVolume = 51,
                 Color = allColors[rng.Next(0, allColors.Length)],
                 MotorNumber = rng.Next(50, 101),
                 RegistrationNumber = rng.Next(1000, 10000).ToString(),              

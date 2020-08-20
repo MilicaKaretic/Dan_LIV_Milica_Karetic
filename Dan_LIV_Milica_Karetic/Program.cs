@@ -49,7 +49,7 @@ namespace Dan_LIV_Milica_Karetic
             Automobile golf = new Automobile
             {
                 Color = "Orange",
-                TankVolume = 51,
+                MaxTankVolume = 51,
                 Producer = "Golf"
             };
             allAutomobiles.Add(golf);
@@ -72,6 +72,8 @@ namespace Dan_LIV_Milica_Karetic
                 IsBackground = true
             };
             thread4.Start();
+
+            Console.ReadKey();
         }
 
         
