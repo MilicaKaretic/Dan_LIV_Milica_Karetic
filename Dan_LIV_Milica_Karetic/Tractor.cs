@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dan_LIV_Milica_Karetic
 {
@@ -14,6 +10,9 @@ namespace Dan_LIV_Milica_Karetic
 
         private readonly string[] allDrive = { "drive1", "drive2", "drive3" };
 
+        /// <summary>
+        /// create new tractor
+        /// </summary>
         public override void CreateNewVehicle()
         {
             Tractor tractor = new Tractor
@@ -28,7 +27,7 @@ namespace Dan_LIV_Milica_Karetic
                 WheelBase = rng.Next(2, 11),
                 Drive = allDrive[rng.Next(0, allDrive.Length)],
             };
-
+            //add tractor to tractor list
             Program.allTractor.Add(tractor);
         }
     }

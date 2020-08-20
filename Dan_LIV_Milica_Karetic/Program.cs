@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Dan_LIV_Milica_Karetic
 {
@@ -32,13 +29,14 @@ namespace Dan_LIV_Milica_Karetic
                 tractor.CreateNewVehicle();
             }
 
+            //stopwatch 5 seconds
             for (int i = 1; i < 6; i++)
             {               
                 Console.WriteLine(i);
                 Thread.Sleep(1000);
             }
 
-            // Starting threads
+            // Starting cars
             for (int i = 0; i < allAutomobiles.Count; i++)
             {
                 int temp = i;
@@ -46,7 +44,7 @@ namespace Dan_LIV_Milica_Karetic
                 thread1.Start();
             }
 
-            // Creating golf car
+            // Creating orange golf car
             Random rng = new Random();
             Automobile golf = new Automobile
             {
@@ -56,6 +54,7 @@ namespace Dan_LIV_Milica_Karetic
             };
             allAutomobiles.Add(golf);
 
+            //check if there is red car in cars list
             for (int i = 0; i < allAutomobiles.Count; i++)
             {
                 if(allAutomobiles[i].Color == "Red")
@@ -65,12 +64,12 @@ namespace Dan_LIV_Milica_Karetic
                 }
             }
 
-            // Starting golf
+            //Starting orange golf
             Console.WriteLine(golf.Color + " " + golf.Producer + " joined the race\n\n\n");
             Thread threadGolf = new Thread(() => race.Racing(golf));
             threadGolf.Start();
 
-            // Thread that changes the semaphore color every 2 seconds
+            //Thread that changes the semaphore color for 2 seconds
             Thread thread3 = new Thread(race.ChangeSemaphoreColor)
             {
                 IsBackground = true

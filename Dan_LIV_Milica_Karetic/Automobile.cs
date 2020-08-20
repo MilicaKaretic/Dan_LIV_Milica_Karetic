@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dan_LIV_Milica_Karetic
 {
@@ -22,21 +18,34 @@ namespace Dan_LIV_Milica_Karetic
         {
 
         }
+        /// <summary>
+        /// Recolor method that change color and traffic number of car
+        /// </summary>
+        /// <param name="color">New color</param>
+        /// <param name="trafficNumber">new traffic number</param>
         public void Recolor(string color, int trafficNumber)
         {
             Color = color;
             TrafficNumber = trafficNumber;
         }
-
+        /// <summary>
+        /// Move car
+        /// </summary>
         public override void Move()
         {
             Console.WriteLine(this.Color + " " + this.Producer + " started moving.");
         }
+        /// <summary>
+        /// stop car
+        /// </summary>
         public override void Stop()
         {
             Console.WriteLine(this.Color + " " + this.Producer + " stopped moving.");
         }
 
+        /// <summary>
+        /// create new car
+        /// </summary>
         public override void CreateNewVehicle()
         {
             Automobile auto = new Automobile
@@ -55,7 +64,7 @@ namespace Dan_LIV_Milica_Karetic
                 TrafficNumber = rng.Next(100, 1000)
             };
 
-           // Raceing.ready.AddCount();
+            //add new car to list
             Program.allAutomobiles.Add(auto);
         }
 

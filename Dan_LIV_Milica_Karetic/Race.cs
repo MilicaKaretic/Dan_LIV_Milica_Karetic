@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Dan_LIV_Milica_Karetic
 {
     class Race
     {
-
-
         private bool endRace = false;
         private static readonly Random rng = new Random();
 
@@ -25,9 +19,13 @@ namespace Dan_LIV_Milica_Karetic
         CountdownEvent cnt = new CountdownEvent(3);
         SemaphoreSlim gasStation = new SemaphoreSlim(1);
 
+        
         private EventWaitHandle winRace = new AutoResetEvent(true);
 
-        public  void ChangeSemaphoreColor()
+        /// <summary>
+        /// method for changing semaphore color
+        /// </summary>
+        public void ChangeSemaphoreColor()
         {
             Console.WriteLine("Semaphore is  active.");
             for (int i = 0; i < 3; i++)
@@ -50,11 +48,13 @@ namespace Dan_LIV_Milica_Karetic
                     break;
                 }
 
-
-                Thread.Sleep(1900);
+                Thread.Sleep(2000);
             }
         }
 
+        /// <summary>
+        /// decrease tank volume per second
+        /// </summary>
         public  void DecreaseTankVolume()
         {
             // Do this while the race is active
@@ -68,6 +68,11 @@ namespace Dan_LIV_Milica_Karetic
             }
         }
 
+        /// <summary>
+        /// drive to semaphore or gas station or end of race
+        /// </summary>
+        /// <param name="secs">How long to drive</param>
+        /// <param name="auto">Who is driving</param>
         public void Drive(int secs, Automobile auto)
         {
             for (int i = 0; i < secs; i++)
@@ -79,15 +84,23 @@ namespace Dan_LIV_Milica_Karetic
                 }
             }
         }
+
         readonly object l = new object();
 
+        /// <summary>
+        /// Car racing
+        /// </summary>
+        /// <param name="automobile">Car on race</param>
         public void Racing(Automobile automobile)
         {
+            //all (3) cars pass
             cnt.Signal();
             cnt.Wait();
 
+            //go car
             automobile.Move();
 
+            //while car have tank volume
             while(automobile.MaxTankVolume > 0)
             {
                 //driving to semaphore
@@ -119,6 +132,7 @@ namespace Dan_LIV_Milica_Karetic
                     Console.WriteLine("{0} {1} passed the gas station with tank valume: {2} l.", automobile.Color, automobile.Producer, automobile.MaxTankVolume);
                 }
 
+                //drive 7 seconds to end of race
                 Drive(7, automobile);
                 break;
             }
@@ -126,6 +140,7 @@ namespace Dan_LIV_Milica_Karetic
             // Checks if the car is out of gas
             if (automobile.MaxTankVolume <= 0)
             {
+                //stop the car
                 automobile.Stop();
                 Console.WriteLine("{0} {1} is out of gas and left the race.", automobile.Color, automobile.Producer);
             }
@@ -136,11 +151,16 @@ namespace Dan_LIV_Milica_Karetic
             }
 
             winRace.WaitOne();
+            //check race result
             EndRaceResult(automobile);
         }
 
         private bool fastestRed = false;
 
+        /// <summary>
+        /// Race result based on car's tank volume 
+        /// </summary>
+        /// <param name="automobile"></param>
         public void EndRaceResult(Automobile automobile)
         {
 
@@ -149,17 +169,19 @@ namespace Dan_LIV_Milica_Karetic
                 carCounter++;
             }
 
+            //increase number of cars that reached the end of race
             if(automobile.MaxTankVolume > 0)
             {
                 winners++;
             }
 
+            //print place that car took
             if(winners > 0 && automobile.MaxTankVolume > 0)
             {
                 Console.WriteLine("\n{0}. {1} {2}", winners, automobile.Color, automobile.Producer);
             }
 
-
+            //print red car result
             if(automobile.Color == "Red" && automobile.MaxTankVolume > 0 && !fastestRed)
             {
                 fastestRed = true;
@@ -177,19 +199,31 @@ namespace Dan_LIV_Milica_Karetic
             winRace.Set();
         }
 
+        /// <summary>
+        /// print red car result
+        /// </summary>
+        /// <param name="automobile">Red car</param>
         public void PrintFirstRed(Automobile automobile)
         {
             winRace.Set();
             Console.WriteLine("\n\nFastest red car is: {0} {1}.\n", automobile.Color, automobile.Producer);
         }
 
+        /// <summary>
+        /// Method that simulates charginig ar gas station
+        /// </summary>
+        /// <param name="automobile">Car</param>
         public void ChargingAtGasStation(Automobile automobile)
         {
+            //one can charge at time
             gasStation.Wait();
             Console.WriteLine("{0} {1} is charging, current tank volume: {2}l", automobile.Color, automobile.Producer, automobile.MaxTankVolume);
+            //charge
             Thread.Sleep(50);
+            //charge to max tank value
             automobile.MaxTankVolume = 51;
             Console.WriteLine("{0} {1} finished charging their tank", automobile.Color, automobile.Producer);
+            //release gas station so another car can charge
             gasStation.Release();
         }
     }

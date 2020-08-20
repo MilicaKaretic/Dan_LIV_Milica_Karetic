@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dan_LIV_Milica_Karetic
 {
+    /// <summary>
+    /// abstract class motorVehicle
+    /// </summary>
     public abstract class MotorVehicle
     {
         public double MotorVolume { get; set; }
@@ -26,18 +25,27 @@ namespace Dan_LIV_Milica_Karetic
 
         }
 
+        /// <summary>
+        /// create new vehicle
+        /// </summary>
         public virtual void CreateNewVehicle()
         {
 
         }
 
+        /// <summary>
+        /// move vehicle
+        /// </summary>
         public virtual void Move()
         {
-            Console.WriteLine("Turn on motor and start going.");
+
         }
+        /// <summary>
+        /// stop vehicle
+        /// </summary>
         public virtual void Stop()
         {
-            Console.WriteLine("Turn off motor.");
+
         }
     }
 }

@@ -17,18 +17,25 @@ namespace Dan_LIV_Milica_Karetic
                 
         }
 
-        
-
+        /// <summary>
+        /// loading truck
+        /// </summary>
         public void Load()
         {
             Console.WriteLine("Load the truck");
         }
 
+        /// <summary>
+        /// unloading truck
+        /// </summary>
         public void Unload()
         {
             Console.WriteLine("Unload the truck");
         }
 
+        /// <summary>
+        /// create new truck
+        /// </summary>
         public override void CreateNewVehicle()
         {
             Truck truck = new Truck
@@ -43,7 +50,7 @@ namespace Dan_LIV_Milica_Karetic
                 Hight = Math.Round(rng.NextDouble() * 100, 2),
                 SeatNumber = rng.Next(2, 7),
             };
-
+            //add truck to truck list
             Program.allTruck.Add(truck);
         }
     }
