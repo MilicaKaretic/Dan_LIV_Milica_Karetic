@@ -6,14 +6,30 @@ using System.Threading.Tasks;
 
 namespace Dan_LIV_Milica_Karetic
 {
-    abstract class MotorVehicle
+    public abstract class MotorVehicle
     {
-        double MotorVolume { get; set; }
+        public double MotorVolume { get; set; }
         public int Weight { get; set; }
         public string Category { get; set; }
         public string MotorType { get; set; }
         public string Color { get; set; }
         public int MotorNumber { get; set; }
+
+        protected readonly string[] allColors = { "Red", "Blue", "Yellow","Orange", "Black" };
+        protected readonly string[] allCategory = { "A", "B", "C", "D" };
+        protected readonly string[] allMotorType = { "DC", "AC", "LM", "SRM" };
+
+        public static Random rng = new Random();
+
+        public MotorVehicle()
+        {
+
+        }
+
+        public virtual void CreateNewVehicle()
+        {
+
+        }
 
         public virtual void Move()
         {

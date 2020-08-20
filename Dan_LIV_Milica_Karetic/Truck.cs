@@ -12,14 +12,39 @@ namespace Dan_LIV_Milica_Karetic
         public double Hight { get; set; }
         public int SeatNumber { get; set; }
 
+        public Truck() : base()
+        {
+                
+        }
+
+        
+
         public void Load()
         {
-            Console.WriteLine("Fill up the truck");
+            Console.WriteLine("Load the truck");
         }
 
         public void Unload()
         {
-            Console.WriteLine("Remove items from the truck");
+            Console.WriteLine("Unload the truck");
+        }
+
+        public override void CreateNewVehicle()
+        {
+            Truck truck = new Truck
+            {
+                MotorVolume = Math.Round(rng.NextDouble() * 1000, 2),
+                Weight = rng.Next(1000, 2001),
+                Category = allCategory[rng.Next(0, allCategory.Length)],
+                MotorType = allMotorType[rng.Next(0, allMotorType.Length)],
+                Color = allColors[rng.Next(0, allColors.Length)],
+                MotorNumber = rng.Next(50, 101),
+                Capacity = Math.Round(rng.NextDouble() * 10000, 2),
+                Hight = Math.Round(rng.NextDouble() * 100, 2),
+                SeatNumber = rng.Next(2, 7),
+            };
+
+            Program.allTruck.Add(truck);
         }
     }
 }
