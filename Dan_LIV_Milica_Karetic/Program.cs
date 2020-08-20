@@ -12,7 +12,8 @@ namespace Dan_LIV_Milica_Karetic
         public static List<Automobile> allAutomobiles = new List<Automobile>();
         public static List<Tractor> allTractor = new List<Tractor>();
         public static List<Truck> allTruck = new List<Truck>();
-       
+
+        public static bool isRedCar = false;
 
         static void Main(string[] args)
         {
@@ -21,6 +22,7 @@ namespace Dan_LIV_Milica_Karetic
             Truck truck = new Truck();
 
             Race race = new Race();
+            
 
             // Creating vehicles
             for (int i = 0; i < 2; i++)
@@ -53,6 +55,15 @@ namespace Dan_LIV_Milica_Karetic
                 Producer = "Golf"
             };
             allAutomobiles.Add(golf);
+
+            for (int i = 0; i < allAutomobiles.Count; i++)
+            {
+                if(allAutomobiles[i].Color == "Red")
+                {
+                    isRedCar = true;
+                    break;
+                }
+            }
 
             // Starting golf
             Console.WriteLine(golf.Color + " " + golf.Producer + " joined the race\n\n\n");

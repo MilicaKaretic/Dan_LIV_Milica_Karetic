@@ -19,9 +19,13 @@ namespace Dan_LIV_Milica_Karetic
         private readonly string[] colorOptions = { "Red", "Green"};
 
         private static int carCounter = 0;
+        private static int winners = 0;
+
 
         CountdownEvent cnt = new CountdownEvent(3);
         SemaphoreSlim gasStation = new SemaphoreSlim(1);
+
+        private EventWaitHandle winRace = new AutoResetEvent(true);
 
         public  void ChangeSemaphoreColor()
         {
@@ -41,7 +45,7 @@ namespace Dan_LIV_Milica_Karetic
                 Thread.Sleep(100);
                 if (carCounter == 3)
                 {
-                    Console.WriteLine("All cars passed the semaphore.");
+                    Console.WriteLine("\nAll cars passed the semaphore.\n");
                     carCounter = 0;
                     break;
                 }
@@ -105,17 +109,17 @@ namespace Dan_LIV_Milica_Karetic
                 //drive to gas stayion
                 Drive(3, automobile);
 
+                //if tank values is less than 15 than go to gas station
                 if (automobile.MaxTankVolume < 15)
                 {
                     ChargingAtGasStation(automobile);
                 }
                 else
                 {
-                    Console.WriteLine("{0} {1} passed the gas station with tank valume: {2}l.", automobile.Color, automobile.Producer, automobile.MaxTankVolume);
+                    Console.WriteLine("{0} {1} passed the gas station with tank valume: {2} l.", automobile.Color, automobile.Producer, automobile.MaxTankVolume);
                 }
 
                 Drive(7, automobile);
-
                 break;
             }
 
@@ -128,9 +132,55 @@ namespace Dan_LIV_Milica_Karetic
             else if (automobile.MaxTankVolume > 0)
             {
                 Console.WriteLine("{0} {1} car arrived to the end of race", automobile.Color, automobile.Producer);
-                // Reset the tank volume
                 automobile.Stop();
             }
+
+            winRace.WaitOne();
+            EndRaceResult(automobile);
+        }
+
+        private bool fastestRed = false;
+
+        public void EndRaceResult(Automobile automobile)
+        {
+
+            lock (l)
+            {
+                carCounter++;
+            }
+
+            if(automobile.MaxTankVolume > 0)
+            {
+                winners++;
+            }
+
+            if(winners > 0 && automobile.MaxTankVolume > 0)
+            {
+                Console.WriteLine("\n{0}. {1} {2}", winners, automobile.Color, automobile.Producer);
+            }
+
+
+            if(automobile.Color == "Red" && automobile.MaxTankVolume > 0 && !fastestRed)
+            {
+                fastestRed = true;
+                PrintFirstRed(automobile);
+            }
+            else if (carCounter == 3 && Program.isRedCar == false)
+            {
+                Console.WriteLine("\n\nThere were no red cars in the race.\n");
+            }
+            else if (carCounter == 3 && Program.isRedCar == true && fastestRed == false)
+            {
+                Console.WriteLine("\n\nNo red cars get to the end of race.\n");
+            }
+            
+            winRace.Set();
+        }
+
+        public void PrintFirstRed(Automobile automobile)
+        {
+            winRace.Set();
+            Console.WriteLine("\n\nFastest red car is: {0} {1}.\n", automobile.Color, automobile.Producer);
         }
 
         public void ChargingAtGasStation(Automobile automobile)
